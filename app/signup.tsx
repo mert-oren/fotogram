@@ -1,68 +1,54 @@
-import { useAuth } from '@/context/AuthContext';
 import { auth } from '@/firebaseConfig';
-import { router } from 'expo-router';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { useEffect, useState } from 'react';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { router } from 'expo-router';
 
-export default function LoginScreen() {
-  const { user, loading: authLoading } = useAuth();
+export default function SignupScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (!authLoading && user) {
-      router.replace('/(tabs)/profile');
-    }
-  }, [authLoading, user]);
-
-  const handleLogin = async () => {
+  const handleSignup = async () => {
     if (!email.trim() || !password.trim()) {
       Alert.alert('Eksik bilgi', 'Email ve şifre alanlarını doldurun.');
       return;
     }
 
+    if (password.length < 6) {
+      Alert.alert('Şifre kısa', 'Şifre en az 6 karakter olmalı.');
+      return;
+    }
+
     try {
       setLoading(true);
-      await signInWithEmailAndPassword(auth, email.trim(), password);
+      await createUserWithEmailAndPassword(auth, email.trim(), password);
       router.replace('/(tabs)/profile');
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Giriş yapılırken hata oluştu.';
-      Alert.alert('Giriş başarısız', message);
+      const message = error instanceof Error ? error.message : 'Kayıt olurken hata oluştu.';
+      Alert.alert('Kayıt başarısız', message);
     } finally {
       setLoading(false);
     }
   };
-
-  if (authLoading || user) {
-    return (
-      <View className="flex-1 items-center justify-center bg-neutral-100">
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
 
   return (
     <KeyboardAvoidingView
       className="flex-1 justify-center bg-neutral-100 px-6"
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <View className="gap-4 rounded-2xl bg-white p-6">
-        <Text className="text-center text-4xl font-extrabold text-neutral-950">Fotogram</Text>
+        <Text className="text-center text-3xl font-extrabold text-neutral-950">Kayıt Ol</Text>
 
-        <Text className="mb-4 text-center text-base text-neutral-500">
-          Fotoğraflarını paylaşmaya başla.
-        </Text>
+        <Text className="mb-4 text-center text-base text-neutral-500">Yeni hesabını oluştur.</Text>
 
         <TextInput
           className="h-12 rounded-xl border border-neutral-300 bg-white px-4 text-base"
@@ -85,20 +71,14 @@ export default function LoginScreen() {
           className={`h-12 items-center justify-center rounded-xl bg-neutral-950 ${
             loading ? 'opacity-70' : ''
           }`}
-          onPress={handleLogin}
+          onPress={handleSignup}
           disabled={loading}>
           {loading ? (
             <ActivityIndicator color="#ffffff" />
           ) : (
-            <Text className="text-base font-bold text-white">Giriş Yap</Text>
+            <Text className="text-base font-bold text-white">Kayıt Ol</Text>
           )}
         </TouchableOpacity>
-
-        <Pressable onPress={() => router.push('/signup')}>
-          <Text className="mt-2 text-center text-base font-semibold text-neutral-950">
-            Hesabın yok mu? Kayıt ol
-          </Text>
-        </Pressable>
       </View>
     </KeyboardAvoidingView>
   );
