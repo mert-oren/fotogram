@@ -12,12 +12,12 @@ import { getStorage } from 'firebase/storage';
 import { Platform } from 'react-native';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyBJLa3A4PjVjzfV_nrBxUlaxVvuV4FaXl4',
-  authDomain: 'fotogram-3d0d5.firebaseapp.com',
-  projectId: 'fotogram-3d0d5',
-  storageBucket: 'fotogram-3d0d5.firebasestorage.app',
-  messagingSenderId: '289356542078',
-  appId: '1:289356542078:web:578d474fd6e68e51a3682f',
+  apiKey: 'YOUR_API_KEY',
+  authDomain: 'YOUR_AUTH_DOMAIN',
+  projectId: 'YOUR_PROJECT_ID',
+  storageBucket: 'YOUR_STORAGE_BUCKET',
+  messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
+  appId: 'YOUR_APP_ID',
 };
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
