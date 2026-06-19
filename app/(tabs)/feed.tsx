@@ -14,13 +14,17 @@ export default function FeedScreen() {
   const { data: posts = [], isPending, isRefetching, refetch, error } = usePosts();
 
   const renderPost = ({ item }: { item: Post }) => (
-    <View className="overflow-hidden rounded-2xl bg-white">
+    <View className="w-full max-w-[420px] self-center overflow-hidden rounded-2xl bg-white">
       <View className="gap-1 p-4">
         <Text className="text-base font-bold text-neutral-950">{item.userEmail}</Text>
         <Text className="text-sm text-neutral-500">{formatPostDate(item.createdAt)}</Text>
       </View>
 
-      <Image source={{ uri: item.imageUrl }} className="aspect-square w-full bg-neutral-200" />
+      <Image
+        source={{ uri: item.imageUrl }}
+        className="h-[420px] w-full bg-neutral-200"
+        resizeMode="cover"
+      />
 
       <View className="p-4">
         <Text className="text-base leading-6 text-neutral-950">{item.caption}</Text>
@@ -53,7 +57,9 @@ export default function FeedScreen() {
         keyExtractor={(item) => item.id}
         renderItem={renderPost}
         contentContainerClassName={
-          posts.length === 0 ? 'flex-grow items-center justify-center p-4' : 'gap-4 p-4'
+          posts.length === 0
+            ? 'flex-grow items-center justify-center p-4'
+            : 'items-center gap-4 p-4'
         }
         refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
         ListEmptyComponent={<Text className="text-base text-neutral-500">Henüz gönderi yok.</Text>}
